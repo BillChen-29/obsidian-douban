@@ -35,6 +35,12 @@ export class WatchlistView extends ItemView {
 
   private render(): void {
     this.containerEl.empty();
+    this.containerEl.createEl("div", { text: "加载中..." });
+    this.renderAsync();
+  }
+
+  private async renderAsync(): Promise<void> {
+    this.containerEl.empty();
     this.containerEl.style.padding = "12px";
     this.containerEl.style.overflowY = "auto";
 
@@ -82,8 +88,8 @@ export class WatchlistView extends ItemView {
     const movies: Array<{ file: TFile; title: string; score: string | number; poster: string; mvStatus: string }> = [];
 
     for (const file of files) {
-      const cache = this.plugin.app.metadataCache.getFileCache(file);
-      const fm = cache?.frontmatter;
+      const content = await this.plugin.app.vault.read(file);
+      const fm = this.parseFrontmatter(content);
       if (!fm || fm.type !== "movie") continue;
       if (fm.mvStatus !== this.currentTab) continue;
 
@@ -170,5 +176,24 @@ export class WatchlistView extends ItemView {
         this.plugin.app.workspace.getLeaf(false).openFile(m.file);
       };
     }
+  }
+
+  private parseFrontmatter(content: string): Record<string, any> | null {
+    const match = content.match(/^---\n([\s\S]*?)\n---/);
+    if (!match) return null;
+    const yaml = match[1];
+    const result: Record<string, any> = {};
+    for (const line of yaml.split("\n")) {
+      const m = line.match(/^(\w+):\s*(.*)/);
+      if (m) {
+        let val: any = m[2].trim();
+        if (val === "true") val = true;
+        else if (val === "false") val = false;
+        else if (val === "" || val === "null") val = null;
+        else if (/^-?\d+(\.\d+)?$/.test(val)) val = Number(val);
+        result[m[1]] = val;
+      }
+    }
+    return result;
   }
 }
