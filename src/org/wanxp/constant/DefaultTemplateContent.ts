@@ -210,10 +210,6 @@ desc: {{desc}}
 {{desc}}
 </div>
 </div>
-
-Comment: 
----
-{{myComment}}
 `,
 	bookTemplateFileContent: `---
 doubanId: {{id}}
@@ -325,10 +321,6 @@ desc: {{desc}}
 ---
 
 ![image]({{image}})	
-
-Comment: 
----
-{{myComment}}
 `,teleplayTemplateFileContent: `---
 doubanId: {{id}}
 title: {{title}}
@@ -368,10 +360,6 @@ desc: {{desc}}
 {{desc}}
 </div>
 </div>
-
-Comment: 
----
-{{myComment}}
 `,
 }
 
