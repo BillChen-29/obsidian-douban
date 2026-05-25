@@ -128,7 +128,8 @@ export default class DoubanPlugin extends Plugin {
 			await this.fileHandler.createNewNoteWithData(filePath, content, context.showAfterCreate);
 		}
 		// Auto-create watchlist after first movie
-		if (subject.type === "movie" || subject.type === SupportType.movie) {
+		if (subject.type === "movie" || subject.type === SupportType.movie
+			|| (subject.type && (subject.type as string).includes("电影"))) {
 			await this.createWatchlistIfNeeded();
 		}
 	}
