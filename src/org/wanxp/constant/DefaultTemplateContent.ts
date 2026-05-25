@@ -29,13 +29,14 @@ createTime: {{currentDate}} {{currentTime}}
 desc: {{desc}}
 ---
 
-<img src="{{image}}" width="160" align="left" style="margin-right:12px;border-radius:4px">
-
-# {{title}}
-
-⭐ {{score}} | {{yearPublished}}
+<div style="display:flex;gap:16px;align-items:flex-start">
+<img src="{{image}}" width="140" style="border-radius:6px;flex-shrink:0">
+<div style="flex:1;min-width:0">
+**⭐ {{score}}** | {{yearPublished}}
 
 {{desc}}
+</div>
+</div>
 `,
 
 	bookTemplateFileContent: `---
@@ -159,13 +160,14 @@ createTime: {{currentDate}} {{currentTime}}
 desc: {{desc}}
 ---
 
-<img src="{{image}}" width="160" align="left" style="margin-right:12px;border-radius:4px">
-
-# {{title}}
-
-⭐ {{score}} | {{yearPublished}}
+<div style="display:flex;gap:16px;align-items:flex-start">
+<img src="{{image}}" width="140" style="border-radius:6px;flex-shrink:0">
+<div style="flex:1;min-width:0">
+**⭐ {{score}}** | {{yearPublished}}
 
 {{desc}}
+</div>
+</div>
 `,
 }
 
@@ -200,13 +202,14 @@ collectionDate: {{myCollectionDate}}
 desc: {{desc}}
 ---
 
-<img src="{{image}}" width="160" align="left" style="margin-right:12px;border-radius:4px">
-
-# {{title}}
-
-⭐ {{score}} | {{yearPublished}}
+<div style="display:flex;gap:16px;align-items:flex-start">
+<img src="{{image}}" width="140" style="border-radius:6px;flex-shrink:0">
+<div style="flex:1;min-width:0">
+**⭐ {{score}}** | {{yearPublished}}
 
 {{desc}}
+</div>
+</div>
 
 Comment: 
 ---
@@ -357,13 +360,14 @@ collectionDate: {{myCollectionDate}}
 desc: {{desc}}
 ---
 
-<img src="{{image}}" width="160" align="left" style="margin-right:12px;border-radius:4px">
-
-# {{title}}
-
-⭐ {{score}} | {{yearPublished}}
+<div style="display:flex;gap:16px;align-items:flex-start">
+<img src="{{image}}" width="140" style="border-radius:6px;flex-shrink:0">
+<div style="flex:1;min-width:0">
+**⭐ {{score}}** | {{yearPublished}}
 
 {{desc}}
+</div>
+</div>
 
 Comment: 
 ---
