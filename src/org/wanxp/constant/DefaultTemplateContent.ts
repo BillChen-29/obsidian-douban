@@ -13,7 +13,7 @@ datePublished: {{datePublished}}
 director: {{director}}
 actor: {{actor}}
 author: {{author}}
-status: {{status}}
+watchStatus: {{status}}
 priority: 0
 tmdbId: ""
 tags:
@@ -167,7 +167,7 @@ datePublished: {{datePublished}}
 director: {{director}}
 actor: {{actor}}
 author: {{author}}
-status: {{myState}}
+watchStatus: {{myState}}
 priority: 0
 tmdbId: ""
 tags: {{myTags}}
