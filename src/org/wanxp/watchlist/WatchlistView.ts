@@ -9,6 +9,8 @@ interface MovieCard {
   score: string | number;
   poster: string;
   mvStatus: string;
+  director: string;
+  genre: string;
 }
 
 export class WatchlistView extends ItemView {
@@ -110,13 +112,20 @@ export class WatchlistView extends ItemView {
         score: fm.score || "",
         poster: fm.poster || "",
         mvStatus: fm.mvStatus || "",
+        director: (fm.director || []).join(", "),
+        genre: (fm.genre || []).join(", "),
       });
     }
 
     // Filter handler
     const doFilter = () => {
       const q = searchInput.value.toLowerCase();
-      const filtered = q ? this.allMovies.filter(m => m.title.toLowerCase().includes(q)) : this.allMovies;
+      const filtered = q
+        ? this.allMovies.filter(m => {
+            const haystack = [m.title, m.director, m.genre, m.score?.toString() || ""].join(" ").toLowerCase();
+            return haystack.includes(q);
+          })
+        : this.allMovies;
       this.renderGrid(gridContainer, filtered);
     };
     searchInput.oninput = doFilter;
