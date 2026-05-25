@@ -37,9 +37,10 @@ if (movies.length === 0) {
     card.onmouseleave = () => card.style.transform = "";
 
     // 海报
-    if (page.image) {
+    if (page.poster) {
       const img = dv.el("img", "", { container: card });
-      img.src = page.image;
+      const imgFile = app.vault.getAbstractFileByPath(page.poster);
+      if (imgFile) img.src = app.vault.getResourcePath(imgFile);
       img.style.width = "100%";
       img.style.height = "220px";
       img.style.objectFit = "cover";
@@ -141,9 +142,10 @@ if (movies.length === 0) {
     card.onmouseenter = () => card.style.transform = "translateY(-2px)";
     card.onmouseleave = () => card.style.transform = "";
 
-    if (page.image) {
+    if (page.poster) {
       const img = dv.el("img", "", { container: card });
-      img.src = page.image;
+      const imgFile = app.vault.getAbstractFileByPath(page.poster);
+      if (imgFile) img.src = app.vault.getResourcePath(imgFile);
       img.style.width = "100%";
       img.style.height = "220px";
       img.style.objectFit = "cover";
