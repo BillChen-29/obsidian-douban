@@ -290,6 +290,9 @@ export default abstract class DoubanAbstractLoadHandler<T extends DoubanSubject>
 				continue;
 			}
 			const type: DataValueType = VariableUtil.getType(value);
+			const displayValue = (type === DataValueType.string && typeof value === 'string')
+				? value.trim().replace(/\n{3,}/g, '\n\n')
+				: value;
 			if (key == 'score') {
 				variableMap.set(DoubanParameterName.SCORE_STAR, new DataField(
 					DoubanParameterName.SCORE_STAR,
@@ -298,7 +301,7 @@ export default abstract class DoubanAbstractLoadHandler<T extends DoubanSubject>
 					NumberUtil.getRateStar(value, 10, {scoreSetting: context.settings.scoreSetting})
 				));
 			}
-			variableMap.set(key, new DataField(key, type, value, value));
+			variableMap.set(key, new DataField(key, type, value, displayValue));
 		}
 		variableMap.set(DoubanParameterName.IMAGE_URL, new DataField(
 			DoubanParameterName.IMAGE_URL,
