@@ -16,6 +16,7 @@ author: {{author}}
 mvStatus: {{status}}
 priority: 0
 tmdbId: ""
+image: {{image}}
 tags:
   - {{type}}
 url: {{url}}
@@ -170,6 +171,7 @@ author: {{author}}
 mvStatus: {{myState}}
 priority: 0
 tmdbId: ""
+image: {{image}}
 tags: {{myTags}}
 url: {{url}}
 aliases: {{aliases}}

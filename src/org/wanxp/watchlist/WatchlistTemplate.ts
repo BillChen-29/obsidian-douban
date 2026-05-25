@@ -96,7 +96,7 @@ if (movies.length === 0) {
 
     // 点击卡片打开笔记
     card.onclick = () => {
-      app.workspace.openLinkText(page.file.path, "", false);
+      app.workspace.getLeaf(false).openFile(app.vault.getAbstractFileByPath(page.file.path));
     };
   }
 }
@@ -197,7 +197,7 @@ if (movies.length === 0) {
     };
 
     card.onclick = () => {
-      app.workspace.openLinkText(page.file.path, "", false);
+      app.workspace.getLeaf(false).openFile(app.vault.getAbstractFileByPath(page.file.path));
     };
   }
 }
