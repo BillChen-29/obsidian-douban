@@ -50,7 +50,7 @@ export const DEFAULT_SETTINGS: DoubanPluginSetting = {
 	loginHeadersContent: '',
 	cacheImage: true,
 	cacheHighQuantityImage: true,
-	attachmentPath: 'other/attachment',
+	attachmentPath: 'attachments',
 	attachmentFileName: "{{title}}",
 	syncHandledDataArray: [],
 	// syncLastUpdateTime: new Map<string, string>(),
