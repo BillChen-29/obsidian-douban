@@ -31,6 +31,18 @@ export default class DoubanMovieLoadHandler extends DoubanAbstractLoadHandler<Do
 	}
 
 	parseVariable(beforeContent: string, variableMap:Map<string, DataField>, extract: DoubanMovieSubject, context: HandleContext): void {
+		variableMap.set("priority", new DataField(
+			"priority",
+			DataValueType.string,
+			extract.priority || 0,
+			String(extract.priority || 0)
+		));
+		variableMap.set("tmdbId", new DataField(
+			"tmdbId",
+			DataValueType.string,
+			extract.tmdbId || '',
+			extract.tmdbId || ''
+		));
 		variableMap.set("director", new DataField(
 			"director",
 			DataValueType.array,
@@ -131,10 +143,12 @@ export default class DoubanMovieLoadHandler extends DoubanAbstractLoadHandler<Do
 					aliases: [""],
 					language: [""],
 					country: [],
-					time: null,
-					IMDb: null,
-				}
-				return result;
+				time: null,
+				IMDb: null,
+				tmdbId: '',
+				priority: 0,
+			}
+			return result;
 			})[0];
 
 		// Fallback: if JSON-LD parsing failed (e.g., anti-bot page), extract from meta tags
@@ -175,6 +189,8 @@ export default class DoubanMovieLoadHandler extends DoubanAbstractLoadHandler<Do
 				country: [],
 				time: null,
 				IMDb: null,
+				tmdbId: '',
+				priority: 0,
 			};
 		}
 

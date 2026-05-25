@@ -61,6 +61,9 @@ export const DEFAULT_SETTINGS: DoubanPluginSetting = {
 		maxStar: 5,
 	},
 	searchDefaultType: SupportType.all,
+	tmdbApiKey: '',
+	tmdbLanguage: 'zh-CN',
+	tmdbEnabled: false,
 
 }
 

@@ -42,4 +42,7 @@ export interface DoubanPluginSetting {
 	arraySettings: ArraySetting[],
 	scoreSetting: ScoreSetting,
 	searchDefaultType: SupportType,
+	tmdbApiKey: string,
+	tmdbLanguage: string,
+	tmdbEnabled: boolean,
 }

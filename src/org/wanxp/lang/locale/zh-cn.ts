@@ -675,6 +675,19 @@ export default {
 	'504106': `我的音乐`,
 	'504108': `我的游戏`,
 
+	// TMDB settings
+	'tmdb_settings_title': `TMDB`,
+	'tmdb_api_key': `API Key`,
+	'tmdb_api_key_desc': `TMDB API Key，从 themoviedb.org 注册获取`,
+	'tmdb_api_key_placeholder': `输入 TMDB API Key`,
+	'tmdb_language': `语言`,
+	'tmdb_language_desc': `搜索结果语言 (如 zh-CN, en-US)`,
+	'tmdb_enabled': `启用 TMDB 搜索`,
+	'tmdb_enabled_desc': `启用后命令面板出现"搜索 TMDB 电影"命令`,
+	'tmdb_search_placeholder': `输入电影名称搜索 TMDB...`,
+	'tmdb_no_api_key': `请先在设置中填写 TMDB API Key`,
+	'tmdb_type_more': `输入至少 2 个字符`,
+	'tmdb_searching': `搜索中...`,
 
 	'ALL': `全部类型`,
 	'MOVIE': `电影`,

@@ -29,6 +29,7 @@ import SyncHandler from "./douban/sync/handler/SyncHandler";
 import UserComponent from "./douban/user/UserComponent";
 import {i18nHelper} from './lang/helper';
 import {log} from "src/org/wanxp/utils/Logutil";
+import {TmdbPickModal} from "./tmdb/TmdbSearchModal";
 import GithubUtil from "./utils/GithubUtil";
 import {DoubanPluginOnlineData} from "./douban/setting/model/DoubanPluginOnlineData";
 import SearcherV2 from "./douban/data/search/SearchV2";
@@ -281,6 +282,16 @@ export default class DoubanPlugin extends Plugin {
 
 
 
+
+
+		// TMDB search command
+		this.addCommand({
+			id: "searcher-tmdb-import-movie",
+			name: i18nHelper.getMessage("tmdb_search_placeholder"),
+			callback: () => {
+				new TmdbPickModal(this.app, this).open();
+			},
+		});
 
 		this.settingsManager = new SettingsManager(this.app, this);
 		// this.fetchOnlineData(this.settingsManager);

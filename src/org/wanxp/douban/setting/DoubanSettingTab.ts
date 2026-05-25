@@ -8,9 +8,10 @@ import { constructBasicUI } from "./BasicSettingsHelper";
 import { constructTemplateVariablesUI } from "./TemplateVariableSettingsHelper";
 import {constructCustomPropertySettingsUI } from "./CustomPropertySettingsHelper";
 import { constructAdvancedUI } from "./AdvancedSettingsHelper";
-import {arraySettingDisplay, arraySettingDisplayUI} from "./ArrayDisplayTypeSettingsHelper";
+import { arraySettingDisplay, arraySettingDisplayUI} from "./ArrayDisplayTypeSettingsHelper";
 import {i18nHelper} from "../../lang/helper";
 import {constructLoginUI} from "./LoginSettingsHelper";
+import {constructTmdbUI} from "./TmdbSettingsHelper";
 
 /**
  * 部分逻辑参考以下项目
@@ -47,7 +48,8 @@ export class DoubanSettingTab extends PluginSettingTab {
 	    {name: i18nHelper.getMessage('120601'), construct: arraySettingDisplayUI},
 	    {name: i18nHelper.getMessage('1240'), construct: constructCustomPropertySettingsUI},
 	    {name: i18nHelper.getMessage('1230'), construct: constructTemplateVariablesUI},
-	    {name: i18nHelper.getMessage('1250'), construct: constructAdvancedUI}
+	    {name: i18nHelper.getMessage('1250'), construct: constructAdvancedUI},
+	    {name: i18nHelper.getMessage('tmdb_settings_title'), construct: constructTmdbUI},
 	  ];
 
 	  tabs.forEach((tab, index) => {

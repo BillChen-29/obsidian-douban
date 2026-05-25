@@ -13,4 +13,6 @@ export default class DoubanMovieSubject extends DoubanSubject {
 	country: string[];
 	time: string;
 	IMDb: string;
+	tmdbId: string;
+	priority: number;
 }

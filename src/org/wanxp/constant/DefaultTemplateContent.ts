@@ -13,7 +13,10 @@ datePublished: {{datePublished}}
 director: {{director}}
 actor: {{actor}}
 author: {{author}}
-tags: 
+status: ""
+priority: 0
+tmdbId: ""
+tags:
   - {{type}}
 url: {{url}}
 aliases: {{aliases}}
@@ -163,8 +166,10 @@ datePublished: {{datePublished}}
 director: {{director}}
 actor: {{actor}}
 author: {{author}}
+status: {{myState}}
+priority: 0
+tmdbId: ""
 tags: {{myTags}}
-state: {{myState}}
 url: {{url}}
 aliases: {{aliases}}
 country: {{country}}

@@ -677,7 +677,19 @@ PS: This file could be delete if you want to.
 
 	'movie_and_teleplay': `movie&tv`,
 
-
+	// TMDB settings
+	'tmdb_settings_title': `TMDB`,
+	'tmdb_api_key': `API Key`,
+	'tmdb_api_key_desc': `TMDB API Key, get from themoviedb.org`,
+	'tmdb_api_key_placeholder': `Enter TMDB API Key`,
+	'tmdb_language': `Language`,
+	'tmdb_language_desc': `Search result language (e.g. zh-CN, en-US)`,
+	'tmdb_enabled': `Enable TMDB Search`,
+	'tmdb_enabled_desc': `Show \"Search TMDB Movie\" command in command palette`,
+	'tmdb_search_placeholder': `Search TMDB by movie name...`,
+	'tmdb_no_api_key': `Please set TMDB API Key in settings first`,
+	'tmdb_type_more': `Type at least 2 characters`,
+	'tmdb_searching': `Searching...`,
 
 	'DAY': `D`,
 	'HOUR': `H`,
