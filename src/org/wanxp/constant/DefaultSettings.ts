@@ -62,6 +62,7 @@ export const DEFAULT_SETTINGS: DoubanPluginSetting = {
 	},
 	searchDefaultType: SupportType.movie,
 	tmdbApiKey: '',
+	tmdbAccessToken: '',
 	tmdbLanguage: 'zh-CN',
 	tmdbEnabled: false,
 

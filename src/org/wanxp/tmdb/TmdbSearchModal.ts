@@ -55,13 +55,14 @@ export class TmdbPickModal extends SuggestModal<TmdbPickItem> {
 		if (item.id === -1) return;
 
 		const apiKey = this.plugin.settings.tmdbApiKey;
-		if (!apiKey) {
+		const accessToken = this.plugin.settings.tmdbAccessToken;
+		if (!apiKey && !accessToken) {
 			new Notice(i18nHelper.getMessage("tmdb_no_api_key"));
 			return;
 		}
 		try {
 			new Notice(`Fetching ${item.title}...`);
-			const detail = await tmdbGetDetail(apiKey, item.id, this.plugin.settings.tmdbLanguage);
+			const detail = await tmdbGetDetail(apiKey, accessToken, item.id, this.plugin.settings.tmdbLanguage);
 
 			const subject = new DoubanMovieSubject();
 			subject.id = String(detail.id);
@@ -108,9 +109,10 @@ export class TmdbPickModal extends SuggestModal<TmdbPickItem> {
 
 	private async doSearch(query: string): Promise<void> {
 		const apiKey = this.plugin.settings.tmdbApiKey;
-		if (!apiKey || query.length < 2) return;
+		const accessToken = this.plugin.settings.tmdbAccessToken;
+		if ((!apiKey && !accessToken) || query.length < 2) return;
 		try {
-			const results = await tmdbSearch(apiKey, query, this.plugin.settings.tmdbLanguage);
+			const results = await tmdbSearch(apiKey, accessToken, query, this.plugin.settings.tmdbLanguage);
 			this.allResults = results.map(r => ({
 				id: r.id,
 				title: r.title,

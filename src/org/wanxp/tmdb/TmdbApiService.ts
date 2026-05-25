@@ -30,9 +30,12 @@ export interface TmdbMovieDetail {
 
 const TMDB_IMAGE_BASE = "https://image.tmdb.org/t/p/w500";
 
-export function tmdbSearch(apiKey: string, query: string, language: string): Promise<TmdbSearchResult[]> {
-	const url = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${encodeURIComponent(query)}&page=1&include_adult=true`;
-	return requestUrl({url, method: "GET"}).then(resp => {
+export function tmdbSearch(apiKey: string, accessToken: string, query: string, language: string): Promise<TmdbSearchResult[]> {
+	const headers: Record<string,string> = {};
+  if (accessToken) { headers["Authorization"] = "Bearer " + accessToken; }
+  const queryStr = accessToken ? "" : "api_key=" + apiKey + "&";
+  const url = "https://api.themoviedb.org/3/search/movie?" + queryStr + "query=" + encodeURIComponent(query) + "&page=1&include_adult=true";
+	return requestUrl({url, method: "GET", headers}).then(resp => {
 		const json = resp.json;
 		return (json.results || []).map((r: any) => ({
 			id: r.id,
@@ -46,9 +49,12 @@ export function tmdbSearch(apiKey: string, query: string, language: string): Pro
 	});
 }
 
-export function tmdbGetDetail(apiKey: string, id: number, language: string): Promise<TmdbMovieDetail> {
-	const url = `https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}&append_to_response=credits`;
-	return requestUrl({url, method: "GET"}).then(resp => {
+export function tmdbGetDetail(apiKey: string, accessToken: string, id: number, language: string): Promise<TmdbMovieDetail> {
+	const headers: Record<string,string> = {};
+	if (accessToken) { headers["Authorization"] = "Bearer " + accessToken; }
+	const queryStr = accessToken ? "" : "api_key=" + apiKey + "&";
+	const url = "https://api.themoviedb.org/3/movie/" + id + "?" + queryStr + "language=" + language + "&append_to_response=credits";
+	return requestUrl({url, method: "GET", headers}).then(resp => {
 		const r = resp.json;
 		const crew = r.credits?.crew || [];
 		const cast = r.credits?.cast || [];
