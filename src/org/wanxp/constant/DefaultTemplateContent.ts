@@ -35,8 +35,6 @@ desc: {{desc}}
 
 ⭐ {{score}} | {{yearPublished}}
 
-**导演**: {{director}}
-
 {{desc}}
 `,
 
@@ -167,8 +165,6 @@ desc: {{desc}}
 
 ⭐ {{score}} | {{yearPublished}}
 
-**导演**: {{director}}
-
 {{desc}}
 `,
 }
@@ -209,8 +205,6 @@ desc: {{desc}}
 # {{title}}
 
 ⭐ {{score}} | {{yearPublished}}
-
-**导演**: {{director}}
 
 {{desc}}
 
@@ -368,8 +362,6 @@ desc: {{desc}}
 # {{title}}
 
 ⭐ {{score}} | {{yearPublished}}
-
-**导演**: {{director}}
 
 {{desc}}
 
