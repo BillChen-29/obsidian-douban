@@ -6,14 +6,16 @@ const localeMap: { [k: string]: Partial<typeof en> } = {
 	zh: zhCN,
 };
 
-const lang = window.localStorage.getItem('language');
-const locale = localeMap[lang || 'en'];
-
+function getLocale() {
+	const lang = window.localStorage.getItem('language') || 'zh';
+	return localeMap[lang] || localeMap['en'];
+}
 
 export default class I18nHelper {
 	public getMessage(str: keyof typeof en | string, ...params: any[]): string {
+		const locale = getLocale();
 		if (!locale) {
-			console.error('Error: obsidian douban locale not found', lang);
+			console.error('Error: obsidian douban locale not found', window.localStorage.getItem('language'));
 		}
 		// @ts-ignore
 		let val:string = (locale && locale[str]) || en[str];
