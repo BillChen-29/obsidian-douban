@@ -9,6 +9,7 @@ import {Action, SearchHandleMode} from "../constant/Constsant";
 interface TmdbPickItem {
 	id: number;
 	title: string;
+	originalTitle: string;
 	year: string;
 	score: number;
 	overview: string;
@@ -17,6 +18,7 @@ interface TmdbPickItem {
 export class TmdbPickModal extends SuggestModal<TmdbPickItem> {
 	private plugin: DoubanPlugin;
 	private allResults: TmdbPickItem[] = [];
+	private lastQuery: string = "";
 
 	constructor(app: App, plugin: DoubanPlugin) {
 		super(app);
@@ -27,13 +29,22 @@ export class TmdbPickModal extends SuggestModal<TmdbPickItem> {
 
 	getSuggestions(query: string): TmdbPickItem[] {
 		if (query.length < 2) {
-			return [{id: -1, title: i18nHelper.getMessage("tmdb_type_more"), year: "", score: 0, overview: ""}];
+			this.allResults = [];
+			this.lastQuery = "";
+			return [{id: -1, title: i18nHelper.getMessage("tmdb_type_more"), originalTitle: "", year: "", score: 0, overview: ""}];
+		}
+		if (query !== this.lastQuery) {
+			this.lastQuery = query;
+			this.allResults = [];
+			this.doSearch(query);
 		}
 		if (this.allResults.length === 0) {
-			this.doSearch(query);
-			return [{id: -1, title: i18nHelper.getMessage("tmdb_searching"), year: "", score: 0, overview: ""}];
+			return [{id: -1, title: i18nHelper.getMessage("tmdb_searching"), originalTitle: "", year: "", score: 0, overview: ""}];
 		}
-		return this.allResults;
+		return this.allResults.filter(i =>
+			i.title.toLowerCase().includes(query.toLowerCase()) ||
+			(i.originalTitle || "").toLowerCase().includes(query.toLowerCase())
+		);
 	}
 
 	renderSuggestion(item: TmdbPickItem, el: HTMLElement): void {
@@ -114,6 +125,7 @@ export class TmdbPickModal extends SuggestModal<TmdbPickItem> {
 			this.allResults = results.map(r => ({
 				id: r.id,
 				title: r.title,
+				originalTitle: r.originalTitle,
 				year: r.year,
 				score: r.voteAverage,
 				overview: r.overview,
