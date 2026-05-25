@@ -204,7 +204,11 @@ export default class DoubanMovieLoadHandler extends DoubanAbstractLoadHandler<Do
 		this.handlePersonNameByMeta(html, movie, context, 'video:director', 'director');
 
 		const desc: string = html("span[property='v:summary']").text();
-		if (desc) {
+		// 完整简介（含"展开全部"隐藏内容）
+		const fullDesc = html("#link-report span.all.hidden").text() || html("#link-report").text();
+		if (fullDesc && fullDesc.length > (desc?.length || 0)) {
+			movie.desc = fullDesc.trim();
+		} else if (desc) {
 			movie.desc = desc;
 		}
 
