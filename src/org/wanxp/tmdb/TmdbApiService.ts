@@ -31,7 +31,7 @@ export interface TmdbMovieDetail {
 const TMDB_IMAGE_BASE = "https://image.tmdb.org/t/p/w500";
 
 export function tmdbSearch(apiKey: string, query: string, language: string): Promise<TmdbSearchResult[]> {
-	const url = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${encodeURIComponent(query)}&language=${language}&page=1`;
+	const url = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${encodeURIComponent(query)}&language=${language}&page=1&include_adult=true`;
 	return requestUrl({url, method: "GET"}).then(resp => {
 		const json = resp.json;
 		return (json.results || []).map((r: any) => ({
