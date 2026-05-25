@@ -9,8 +9,8 @@ const status = "想看";
 const toStatus = "看过";
 const btnLabel = "✓ 看过";
 
-const movies = dv.pages('"movie/notes"')
-  .where(p => p.type === "movie" && p.watchStatus === status)
+const movies = dv.pages()
+  .where(p => p.file.path.startsWith("movie/notes/") && p.type === "movie" && p.mvStatus === status)
   .sort(p => p.datePublished, 'desc');
 
 if (movies.length === 0) {
@@ -83,7 +83,7 @@ if (movies.length === 0) {
       try {
         const file = app.vault.getAbstractFileByPath(page.file.path);
         await app.fileManager.processFrontMatter(file, fm => {
-          fm.watchStatus = toStatus;
+          fm.mvStatus = toStatus;
         });
         // Force Dataview refresh
         app.metadataCache.trigger("dataview:metadata-change");
@@ -114,8 +114,8 @@ const status = "看过";
 const toStatus = "想看";
 const btnLabel = "↩ 想看";
 
-const movies = dv.pages('"movie/notes"')
-  .where(p => p.type === "movie" && p.watchStatus === status)
+const movies = dv.pages()
+  .where(p => p.file.path.startsWith("movie/notes/") && p.type === "movie" && p.mvStatus === status)
   .sort(p => p.datePublished, 'desc');
 
 if (movies.length === 0) {
@@ -185,7 +185,7 @@ if (movies.length === 0) {
       try {
         const file = app.vault.getAbstractFileByPath(page.file.path);
         await app.fileManager.processFrontMatter(file, fm => {
-          fm.watchStatus = toStatus;
+          fm.mvStatus = toStatus;
         });
         // Force Dataview refresh
         app.metadataCache.trigger("dataview:metadata-change");

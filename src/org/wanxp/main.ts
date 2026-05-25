@@ -313,11 +313,11 @@ export default class DoubanPlugin extends Plugin {
 			"看过": "想看",
 		};
 		const metadata = this.app.metadataCache.getFileCache(file);
-		const currentStatus: string = metadata?.frontmatter?.watchStatus || "";
+		const currentStatus: string = metadata?.frontmatter?.mvStatus || "";
 		const nextStatus = STATUS_CYCLE[currentStatus] || "想看";
 
 		await this.app.fileManager.processFrontMatter(file, (fm: any) => {
-			fm.watchStatus = nextStatus;
+			fm.mvStatus = nextStatus;
 		});
 		new Notice(`状态已切换: ${currentStatus || "(空)"} → ${nextStatus}`);
 	}
