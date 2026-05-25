@@ -9,7 +9,7 @@ const status = "想看";
 const toStatus = "看过";
 const btnLabel = "✓ 看过";
 
-const movies = dv.pages('"movie"')
+const movies = dv.pages('"movie/notes"')
   .where(p => p.type === "movie" && p.status === status)
   .sort(p => p.datePublished, 'desc');
 
@@ -85,8 +85,12 @@ if (movies.length === 0) {
         await app.fileManager.processFrontMatter(file, fm => {
           fm.status = toStatus;
         });
+        // Force Dataview refresh
+        app.metadataCache.trigger("dataview:metadata-change");
+        app.workspace.trigger("dataview:refresh-views");
       } catch(err) {
         btn.textContent = "失败";
+        btn.disabled = false;
       }
     };
 
@@ -110,7 +114,7 @@ const status = "看过";
 const toStatus = "想看";
 const btnLabel = "↩ 想看";
 
-const movies = dv.pages('"movie"')
+const movies = dv.pages('"movie/notes"')
   .where(p => p.type === "movie" && p.status === status)
   .sort(p => p.datePublished, 'desc');
 
@@ -183,8 +187,12 @@ if (movies.length === 0) {
         await app.fileManager.processFrontMatter(file, fm => {
           fm.status = toStatus;
         });
+        // Force Dataview refresh
+        app.metadataCache.trigger("dataview:metadata-change");
+        app.workspace.trigger("dataview:refresh-views");
       } catch(err) {
         btn.textContent = "失败";
+        btn.disabled = false;
       }
     };
 
@@ -201,7 +209,7 @@ if (movies.length === 0) {
  */
 export function getWatchlistFiles(): Record<string, string> {
   return {
-    "movie/想看.md": WANT_TO_WATCH_CONTENT,
-    "movie/看过.md": WATCHED_CONTENT,
+    "想看.md": WANT_TO_WATCH_CONTENT,
+    "看过.md": WATCHED_CONTENT,
   };
 }

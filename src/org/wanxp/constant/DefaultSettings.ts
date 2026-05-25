@@ -34,7 +34,7 @@ export const DEFAULT_SETTINGS: DoubanPluginSetting = {
 	arrayEnd: "",
 	personNameMode: PersonNameMode.CH_NAME,
 	dataFilePath: "",
-	dataFileNamePath: "/movie/{{title}}",
+	dataFileNamePath: "/movie/notes/{{title}}",
 	statusBar: true,
 	debugMode: false,
 	customProperties: [
