@@ -527,6 +527,10 @@ export default abstract class DoubanAbstractLoadHandler<T extends DoubanSubject>
 
 	private async saveImage(extract: T, context: HandleContext, variableMap : Map<string, DataField>) {
 		const {syncConfig} = context;
+		// Skip image download for TMDB (Node.js https can't reach image.tmdb.org)
+		if (extract.image && extract.image.startsWith("https://image.tmdb.org")) {
+			return;
+		}
 		if (!extract.image || (syncConfig && !syncConfig.cacheImage)  || !context.settings.cacheImage) {
 			return;
 		}
