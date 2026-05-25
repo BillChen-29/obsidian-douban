@@ -72,6 +72,7 @@ export class TmdbPickModal extends SuggestModal<TmdbPickItem> {
 		try {
 			new Notice(`Fetching ${item.title}...`);
 			const detail = await tmdbGetDetail(apiKey, accessToken, item.id, this.plugin.settings.tmdbLanguage);
+			console.log("[TMDB] detail fetched:", detail.title);
 
 			const subject = new DoubanMovieSubject();
 			subject.id = String(detail.id);
@@ -106,12 +107,16 @@ export class TmdbPickModal extends SuggestModal<TmdbPickItem> {
 				showAfterCreate: true,
 				action: Action.SearchAndCrate,
 			};
+			console.log("[TMDB] calling parseText...");
 			const result = await this.plugin.doubanExtractHandler.parseText(subject, context);
+			console.log("[TMDB] parseText result:", !!result);
 			if (result) {
 				await this.plugin.putContentToObsidian(context, result);
+				console.log("[TMDB] note created");
 			}
 			this.close();
 		} catch (e) {
+			console.error("[TMDB] error:", e);
 			new Notice(`Failed: ${e.message}`);
 		}
 	}
