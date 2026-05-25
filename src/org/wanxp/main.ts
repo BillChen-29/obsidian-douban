@@ -34,7 +34,7 @@ import GithubUtil from "./utils/GithubUtil";
 import {DoubanPluginOnlineData} from "./douban/setting/model/DoubanPluginOnlineData";
 import SearcherV2 from "./douban/data/search/SearchV2";
 import {SearchPage} from "./douban/data/model/SearchPage";
-import {getWatchlistFiles} from "./watchlist/WatchlistTemplate";
+import {WatchlistView, VIEW_TYPE_WATCHLIST} from "./watchlist/WatchlistView";
 
 export default class DoubanPlugin extends Plugin {
 	public settings: DoubanPluginSetting;
@@ -126,11 +126,6 @@ export default class DoubanPlugin extends Plugin {
 			}
 		}else {
 			await this.fileHandler.createNewNoteWithData(filePath, content, context.showAfterCreate);
-		}
-		// Auto-create watchlist after first movie
-		if (subject.type === "movie" || subject.type === SupportType.movie
-			|| (subject.type && (subject.type as string).includes("电影"))) {
-			await this.createWatchlistIfNeeded();
 		}
 	}
 
@@ -245,19 +240,16 @@ export default class DoubanPlugin extends Plugin {
 			},
 		});
 
-		// Watchlist: create movie watchlist MOC
+		// Watchlist panel
+		this.registerView(VIEW_TYPE_WATCHLIST, (leaf) => new WatchlistView(leaf, this));
+
 		this.addCommand({
-			id: "create-watchlist",
-			name: "创建电影看单",
-			callback: () => this.createWatchlistIfNeeded(),
+			id: "open-watchlist",
+			name: "电影看单",
+			callback: () => this.activateView(),
 		});
 
-		// Watchlist: toggle movie status (想看 ↔ 看过)
-		this.addCommand({
-			id: "toggle-movie-status",
-			name: "切换电影状态",
-			callback: () => this.toggleMovieStatus(),
-		});
+		this.addRibbonIcon("film", "电影看单", () => this.activateView());
 
 		this.settingsManager = new SettingsManager(this.app, this);
 		// this.fetchOnlineData(this.settingsManager);
@@ -291,35 +283,14 @@ export default class DoubanPlugin extends Plugin {
 
 
 
-	async createWatchlistIfNeeded(): Promise<void> {
-		const files = getWatchlistFiles();
-		for (const [path, content] of Object.entries(files)) {
-			const exists = await this.app.vault.adapter.exists(path);
-			if (!exists) {
-				await this.fileHandler.createNewNoteWithData(path, content, false, false);
-			}
+	async activateView(): Promise<void> {
+		const { workspace } = this.app;
+		let leaf = workspace.getLeavesOfType(VIEW_TYPE_WATCHLIST)[0];
+		if (!leaf) {
+			leaf = workspace.getRightLeaf(false);
+			await leaf?.setViewState({ type: VIEW_TYPE_WATCHLIST, active: true });
 		}
-	}
-
-	async toggleMovieStatus(): Promise<void> {
-		const file = this.app.workspace.getActiveFile();
-		if (!file) {
-			new Notice("请先打开一个电影笔记");
-			return;
-		}
-		const STATUS_CYCLE: Record<string, string> = {
-			"": "想看",
-			"想看": "看过",
-			"看过": "想看",
-		};
-		const metadata = this.app.metadataCache.getFileCache(file);
-		const currentStatus: string = metadata?.frontmatter?.mvStatus || "";
-		const nextStatus = STATUS_CYCLE[currentStatus] || "想看";
-
-		await this.app.fileManager.processFrontMatter(file, (fm: any) => {
-			fm.mvStatus = nextStatus;
-		});
-		new Notice(`状态已切换: ${currentStatus || "(空)"} → ${nextStatus}`);
+		workspace.revealLeaf(leaf!);
 	}
 
 	showStatus(origin: string) {
