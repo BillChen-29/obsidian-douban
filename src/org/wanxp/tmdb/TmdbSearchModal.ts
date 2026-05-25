@@ -130,7 +130,7 @@ export class TmdbPickModal extends SuggestModal<TmdbPickItem> {
 				score: r.voteAverage,
 				overview: r.overview,
 			}));
-			this.lastQuery = ""; // allow re-render
+			this.lastQuery = query; // mark as loaded
 			this.inputEl.dispatchEvent(new Event("input"));
 		} catch (e) {
 			new Notice(`TMDB search failed: ${e.message}`);
