@@ -209,7 +209,7 @@ if (movies.length === 0) {
  */
 export function getWatchlistFiles(): Record<string, string> {
   return {
-    "想看.md": WANT_TO_WATCH_CONTENT,
-    "看过.md": WATCHED_CONTENT,
+    "movie/想看.md": WANT_TO_WATCH_CONTENT,
+    "movie/看过.md": WATCHED_CONTENT,
   };
 }
