@@ -51,7 +51,9 @@ export function tmdbSearch(apiKey: string, accessToken: string, query: string, l
 
 export function tmdbGetDetail(apiKey: string, accessToken: string, id: number, language: string): Promise<TmdbMovieDetail> {
 	const headers: Record<string,string> = {};
-	if (accessToken) { headers["Authorization"] = "Bearer " + accessToken; }
+	if (accessToken) {
+		headers["Authorization"] = "Bearer " + accessToken;
+	}
 	const queryStr = accessToken ? "" : "api_key=" + apiKey + "&";
 	const url = "https://api.themoviedb.org/3/movie/" + id + "?" + queryStr + "language=" + language + "&append_to_response=credits";
 	return requestUrl({url, method: "GET", headers}).then(resp => {
