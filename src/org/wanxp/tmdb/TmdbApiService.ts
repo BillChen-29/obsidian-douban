@@ -34,7 +34,7 @@ export function tmdbSearch(apiKey: string, accessToken: string, query: string, l
 	const headers: Record<string,string> = {};
   if (accessToken) { headers["Authorization"] = "Bearer " + accessToken; }
   const queryStr = accessToken ? "" : "api_key=" + apiKey + "&";
-  const url = "https://api.themoviedb.org/3/search/movie?" + queryStr + "query=" + encodeURIComponent(query) + "&page=1&include_adult=true";
+  const url = "https://api.themoviedb.org/3/search/movie?" + queryStr + "query=" + encodeURIComponent(query) + "&language=" + language + "&page=1&include_adult=true";
 	return requestUrl({url, method: "GET", headers}).then(resp => {
 		const json = resp.json;
 		return (json.results || []).map((r: any) => ({
