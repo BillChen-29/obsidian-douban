@@ -33,9 +33,7 @@ export class TmdbPickModal extends SuggestModal<TmdbPickItem> {
 			this.doSearch(query);
 			return [{id: -1, title: i18nHelper.getMessage("tmdb_searching"), year: "", score: 0, overview: ""}];
 		}
-		return this.allResults.filter(i =>
-			i.title.toLowerCase().includes(query.toLowerCase())
-		);
+		return this.allResults;
 	}
 
 	renderSuggestion(item: TmdbPickItem, el: HTMLElement): void {
