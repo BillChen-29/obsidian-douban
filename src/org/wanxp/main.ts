@@ -34,7 +34,7 @@ import GithubUtil from "./utils/GithubUtil";
 import {DoubanPluginOnlineData} from "./douban/setting/model/DoubanPluginOnlineData";
 import SearcherV2 from "./douban/data/search/SearchV2";
 import {SearchPage} from "./douban/data/model/SearchPage";
-import {WATCHLIST_MOC_CONTENT, getWatchlistPath, STATUS_CYCLE} from "./watchlist/WatchlistTemplate";
+import {getWatchlistFiles} from "./watchlist/WatchlistTemplate";
 
 export default class DoubanPlugin extends Plugin {
 	public settings: DoubanPluginSetting;
@@ -292,11 +292,12 @@ export default class DoubanPlugin extends Plugin {
 
 
 	async createWatchlistIfNeeded(): Promise<void> {
-		const path = getWatchlistPath();
-		const exists = await this.app.vault.adapter.exists(path);
-		if (!exists) {
-			await this.fileHandler.createNewNoteWithData(path, WATCHLIST_MOC_CONTENT, false, false);
-			new Notice("电影看单已创建");
+		const files = getWatchlistFiles();
+		for (const [path, content] of Object.entries(files)) {
+			const exists = await this.app.vault.adapter.exists(path);
+			if (!exists) {
+				await this.fileHandler.createNewNoteWithData(path, content, false, false);
+			}
 		}
 	}
 
@@ -306,6 +307,11 @@ export default class DoubanPlugin extends Plugin {
 			new Notice("请先打开一个电影笔记");
 			return;
 		}
+		const STATUS_CYCLE: Record<string, string> = {
+			"": "想看",
+			"想看": "看过",
+			"看过": "想看",
+		};
 		const metadata = this.app.metadataCache.getFileCache(file);
 		const currentStatus: string = metadata?.frontmatter?.status || "";
 		const nextStatus = STATUS_CYCLE[currentStatus] || "想看";
