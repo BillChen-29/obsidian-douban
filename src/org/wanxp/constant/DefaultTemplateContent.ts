@@ -32,9 +32,7 @@ desc: {{desc}}
 <div style="display:flex;gap:16px;align-items:flex-start">
 <img src="{{image}}" width="140" style="border-radius:6px;flex-shrink:0">
 <div style="flex:1;min-width:0">
-**⭐ {{score}}**  |  {{yearPublished}}
-
----
+<p style="margin:0 0 8px 0;font-weight:600">⭐ {{score}}  |  {{yearPublished}}</p>
 
 {{desc}}
 </div>
@@ -165,9 +163,7 @@ desc: {{desc}}
 <div style="display:flex;gap:16px;align-items:flex-start">
 <img src="{{image}}" width="140" style="border-radius:6px;flex-shrink:0">
 <div style="flex:1;min-width:0">
-**⭐ {{score}}**  |  {{yearPublished}}
-
----
+<p style="margin:0 0 8px 0;font-weight:600">⭐ {{score}}  |  {{yearPublished}}</p>
 
 {{desc}}
 </div>
@@ -209,9 +205,7 @@ desc: {{desc}}
 <div style="display:flex;gap:16px;align-items:flex-start">
 <img src="{{image}}" width="140" style="border-radius:6px;flex-shrink:0">
 <div style="flex:1;min-width:0">
-**⭐ {{score}}**  |  {{yearPublished}}
-
----
+<p style="margin:0 0 8px 0;font-weight:600">⭐ {{score}}  |  {{yearPublished}}</p>
 
 {{desc}}
 </div>
@@ -369,9 +363,7 @@ desc: {{desc}}
 <div style="display:flex;gap:16px;align-items:flex-start">
 <img src="{{image}}" width="140" style="border-radius:6px;flex-shrink:0">
 <div style="flex:1;min-width:0">
-**⭐ {{score}}**  |  {{yearPublished}}
-
----
+<p style="margin:0 0 8px 0;font-weight:600">⭐ {{score}}  |  {{yearPublished}}</p>
 
 {{desc}}
 </div>
