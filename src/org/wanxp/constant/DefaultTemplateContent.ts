@@ -13,7 +13,7 @@ datePublished: {{datePublished}}
 director: {{director}}
 actor: {{actor}}
 author: {{author}}
-status: ""
+status: {{status}}
 priority: 0
 tmdbId: ""
 tags:
@@ -30,6 +30,7 @@ desc: {{desc}}
 
 ![image]({{image}})
 `,
+
 	bookTemplateFileContent: `---
 doubanId: {{id}}
 title: {{title}}

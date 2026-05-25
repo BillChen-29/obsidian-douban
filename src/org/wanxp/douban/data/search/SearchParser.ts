@@ -45,8 +45,33 @@ export default class SearchParserHandler {
 		const resultList:DoubanSearchResultSubject[] = list
 			.map(e => load(e))
 			.map(e=>this.parseSearch(e))
-			.map(e => e? e[0]:null);
+			.map(e => e? e[0]:null)
+			.filter(e => e && this.matchSearchType(e, type));
 			return new SearchPage(data.total, pageNum, data.limit, type, resultList);
 		};
+
+	/**
+	 * 按搜索类型二次过滤结果。Douban API 的 cat 参数过滤不完美，
+	 * 通过结果中的 type 标签（[电影]/[书籍]等）做二次确认。
+	 * SupportType.all 不过滤。
+	 */
+	private static matchSearchType(item: DoubanSearchResultSubject, searchType: SupportType): boolean {
+		if (searchType === SupportType.all) return true;
+		const typeStr = item.type || '';
+		const mapping: Record<string, SupportType> = {
+			'电影': SupportType.movie,
+			'电视剧': SupportType.teleplay,
+			'图书': SupportType.book,
+			'书籍': SupportType.book,
+			'音乐': SupportType.music,
+			'游戏': SupportType.game,
+			'舞台剧': SupportType.theater,
+			'日记': SupportType.note,
+		};
+		for (const [label, st] of Object.entries(mapping)) {
+			if (typeStr.includes(label)) return st === searchType;
+		}
+		return false;
+	}
 
 }

@@ -34,6 +34,7 @@ import GithubUtil from "./utils/GithubUtil";
 import {DoubanPluginOnlineData} from "./douban/setting/model/DoubanPluginOnlineData";
 import SearcherV2 from "./douban/data/search/SearchV2";
 import {SearchPage} from "./douban/data/model/SearchPage";
+import {WATCHLIST_MOC_CONTENT, getWatchlistPath, STATUS_CYCLE} from "./watchlist/WatchlistTemplate";
 
 export default class DoubanPlugin extends Plugin {
 	public settings: DoubanPluginSetting;
@@ -126,6 +127,10 @@ export default class DoubanPlugin extends Plugin {
 		}else {
 			await this.fileHandler.createNewNoteWithData(filePath, content, context.showAfterCreate);
 		}
+		// Auto-create watchlist after first movie
+		if (subject.type === "movie" || subject.type === SupportType.movie) {
+			await this.createWatchlistIfNeeded();
+		}
 	}
 
 	async search(searchTerm: string, searchType: SupportType, context: HandleContext) {
@@ -203,19 +208,6 @@ export default class DoubanPlugin extends Plugin {
 		});
 
 		this.addCommand({
-			id: "searcher-douban-by-current-file-name",
-			name: i18nHelper.getMessage("110001"),
-			editorCallback: (editor: Editor) =>
-				this.getDoubanTextForActiveFile({plugin: this,
-					mode: SearchHandleMode.FOR_REPLACE,
-					settings: this.settings,
-					editor: editor,
-					userComponent: this.userComponent,
-					netFileHandler: this.netFileHandler,
-				action: Action.SearchEditorAndReplace}),
-		});
-
-		this.addCommand({
 			id: "sync-douban-import-and-create-file",
 			name: i18nHelper.getMessage("110103"),
 			callback: () =>
@@ -241,47 +233,6 @@ export default class DoubanPlugin extends Plugin {
 					action: Action.SearchAndCrate}, SupportType.movie),
 		});
 
-		this.addCommand({
-			id: "searcher-douban-import-and-create-file-book",
-			name: i18nHelper.getMessage("110104"),
-			callback: () =>
-				this.getDoubanTextForCreateNewNoteForType({plugin: this,
-					mode: SearchHandleMode.FOR_CREATE,
-					settings: this.settings,
-					userComponent: this.userComponent,
-					netFileHandler: this.netFileHandler,
-					showAfterCreate:true,
-					action: Action.SearchAndCrate}, SupportType.book),
-		});
-
-		this.addCommand({
-			id: "searcher-douban-import-and-create-file-music",
-			name: i18nHelper.getMessage("110105"),
-			callback: () =>
-				this.getDoubanTextForCreateNewNoteForType({plugin: this,
-					mode: SearchHandleMode.FOR_CREATE,
-					settings: this.settings,
-					userComponent: this.userComponent,
-					netFileHandler: this.netFileHandler,
-					showAfterCreate:true,
-					action: Action.SearchAndCrate}, SupportType.music),
-		});
-
-		this.addCommand({
-			id: "searcher-douban-import-and-create-file-game",
-			name: i18nHelper.getMessage("110106"),
-			callback: () =>
-				this.getDoubanTextForCreateNewNoteForType({plugin: this,
-					mode: SearchHandleMode.FOR_CREATE,
-					settings: this.settings,
-					userComponent: this.userComponent,
-					netFileHandler: this.netFileHandler,
-					showAfterCreate:true,
-					action: Action.SearchAndCrate}, SupportType.game),
-		});
-
-
-
 
 
 		// TMDB search command
@@ -291,6 +242,20 @@ export default class DoubanPlugin extends Plugin {
 			callback: () => {
 				new TmdbPickModal(this.app, this).open();
 			},
+		});
+
+		// Watchlist: create movie watchlist MOC
+		this.addCommand({
+			id: "create-watchlist",
+			name: "创建电影看单",
+			callback: () => this.createWatchlistIfNeeded(),
+		});
+
+		// Watchlist: toggle movie status (想看 ↔ 看过)
+		this.addCommand({
+			id: "toggle-movie-status",
+			name: "切换电影状态",
+			callback: () => this.toggleMovieStatus(),
 		});
 
 		this.settingsManager = new SettingsManager(this.app, this);
@@ -324,6 +289,31 @@ export default class DoubanPlugin extends Plugin {
 
 
 
+
+	async createWatchlistIfNeeded(): Promise<void> {
+		const path = getWatchlistPath();
+		const exists = await this.app.vault.adapter.exists(path);
+		if (!exists) {
+			await this.fileHandler.createNewNoteWithData(path, WATCHLIST_MOC_CONTENT, false, false);
+			new Notice("电影看单已创建");
+		}
+	}
+
+	async toggleMovieStatus(): Promise<void> {
+		const file = this.app.workspace.getActiveFile();
+		if (!file) {
+			new Notice("请先打开一个电影笔记");
+			return;
+		}
+		const metadata = this.app.metadataCache.getFileCache(file);
+		const currentStatus: string = metadata?.frontmatter?.status || "";
+		const nextStatus = STATUS_CYCLE[currentStatus] || "想看";
+
+		await this.app.fileManager.processFrontMatter(file, (fm: any) => {
+			fm.status = nextStatus;
+		});
+		new Notice(`状态已切换: ${currentStatus || "(空)"} → ${nextStatus}`);
+	}
 
 	showStatus(origin: string) {
 		if (!this.settings.statusBar || !this.doubanStatusBar) {

@@ -43,6 +43,12 @@ export default class DoubanMovieLoadHandler extends DoubanAbstractLoadHandler<Do
 			extract.tmdbId || '',
 			extract.tmdbId || ''
 		));
+		variableMap.set("status", new DataField(
+			"status",
+			DataValueType.string,
+			"想看",
+			"想看"
+		));
 		variableMap.set("director", new DataField(
 			"director",
 			DataValueType.array,
