@@ -3,9 +3,18 @@ import DoubanPlugin from "../main";
 
 export const VIEW_TYPE_WATCHLIST = "movie-watchlist";
 
+interface MovieCard {
+  file: TFile;
+  title: string;
+  score: string | number;
+  poster: string;
+  mvStatus: string;
+}
+
 export class WatchlistView extends ItemView {
   private plugin: DoubanPlugin;
   private currentTab: "想看" | "看过" = "看过";
+  private allMovies: MovieCard[] = [];
 
   constructor(leaf: WorkspaceLeaf, plugin: DoubanPlugin) {
     super(leaf);
@@ -25,46 +34,38 @@ export class WatchlistView extends ItemView {
   }
 
   async onOpen(): Promise<void> {
-    this.containerEl = this.contentEl;
     this.render();
   }
 
   async onClose(): Promise<void> {
-    this.containerEl.empty();
+    this.contentEl.empty();
   }
 
   private render(): void {
-    this.containerEl.empty();
-    this.containerEl.createEl("div", { text: "加载中..." });
+    this.contentEl.empty();
+    this.contentEl.createEl("div", { text: "加载中..." });
     this.renderAsync();
   }
 
   private async renderAsync(): Promise<void> {
-    this.containerEl.empty();
-    this.containerEl.style.padding = "12px";
-    this.containerEl.style.overflowY = "auto";
+    this.contentEl.empty();
+    this.contentEl.style.padding = "12px";
+    this.contentEl.style.overflowY = "auto";
 
     // Header
-    const header = this.containerEl.createEl("div");
-    header.style.display = "flex";
-    header.style.alignItems = "center";
-    header.style.marginBottom = "16px";
-    header.style.gap = "8px";
+    const header = this.contentEl.createEl("div");
+    header.style.cssText = "display:flex;align-items:center;margin-bottom:12px;gap:8px";
 
     const title = header.createEl("h2", { text: "🎬 电影看单" });
-    title.style.margin = "0";
-    title.style.flex = "1";
+    title.style.cssText = "margin:0;flex:1";
 
-    // Refresh button
     const refreshBtn = header.createEl("button", { text: "🔄" });
     refreshBtn.style.cssText = "background:none;border:1px solid var(--interactive-accent);border-radius:4px;padding:4px 8px;cursor:pointer;font-size:14px";
     refreshBtn.onclick = () => this.render();
 
     // Tabs
-    const tabs = this.containerEl.createEl("div");
-    tabs.style.display = "flex";
-    tabs.style.gap = "4px";
-    tabs.style.marginBottom = "16px";
+    const tabs = this.contentEl.createEl("div");
+    tabs.style.cssText = "display:flex;gap:4px;margin-bottom:12px";
 
     const statuses: ("想看" | "看过")[] = ["看过", "想看"];
     for (const s of statuses) {
@@ -80,20 +81,30 @@ export class WatchlistView extends ItemView {
       };
     }
 
-    // Find movies
+    // Search
+    const searchInput = this.contentEl.createEl("input", {
+      type: "text",
+      placeholder: "搜索...",
+    });
+    searchInput.style.cssText = "width:100%;padding:6px 10px;margin-bottom:12px;border:1px solid var(--background-modifier-border);border-radius:4px;background:var(--background-primary);color:var(--text-normal);font-size:13px;box-sizing:border-box";
+
+    // Grid container
+    const gridContainer = this.contentEl.createEl("div");
+    gridContainer.id = "watchlist-grid";
+
+    // Load movies
     const files = this.plugin.app.vault.getMarkdownFiles().filter(
       (f) => f.path.startsWith("movie/notes/")
     );
 
-    const movies: Array<{ file: TFile; title: string; score: string | number; poster: string; mvStatus: string }> = [];
-
+    this.allMovies = [];
     for (const file of files) {
       const content = await this.plugin.app.vault.read(file);
       const fm = this.parseFrontmatter(content);
       if (!fm || fm.type !== "movie") continue;
       if (fm.mvStatus !== this.currentTab) continue;
 
-      movies.push({
+      this.allMovies.push({
         file,
         title: fm.title || file.basename,
         score: fm.score || "",
@@ -102,28 +113,40 @@ export class WatchlistView extends ItemView {
       });
     }
 
+    // Filter handler
+    const doFilter = () => {
+      const q = searchInput.value.toLowerCase();
+      const filtered = q ? this.allMovies.filter(m => m.title.toLowerCase().includes(q)) : this.allMovies;
+      this.renderGrid(gridContainer, filtered);
+    };
+    searchInput.oninput = doFilter;
+
+    // Initial render
+    doFilter();
+  }
+
+  private renderGrid(container: HTMLElement, movies: MovieCard[]): void {
+    container.empty();
+
     if (movies.length === 0) {
-      const empty = this.containerEl.createEl("div", {
+      const empty = container.createEl("div", {
         text: this.currentTab === "想看" ? "暂无想看的电影" : "还没有看过的电影",
       });
       empty.style.cssText = "color:var(--text-muted);padding:24px;text-align:center";
       return;
     }
 
-    // Card grid
-    const grid = this.containerEl.createEl("div");
-    grid.style.display = "flex";
-    grid.style.flexWrap = "wrap";
-    grid.style.gap = "12px";
+    container.style.display = "flex";
+    container.style.flexWrap = "wrap";
+    container.style.gap = "12px";
 
     for (const m of movies) {
-      const card = grid.createEl("div");
+      const card = container.createEl("div");
       card.style.cssText =
         "width:160px;border-radius:8px;overflow:hidden;background:var(--background-primary-alt);box-shadow:0 1px 3px rgba(0,0,0,0.12);cursor:pointer;transition:transform 0.15s";
       card.onmouseenter = () => (card.style.transform = "translateY(-2px)");
       card.onmouseleave = () => (card.style.transform = "");
 
-      // Poster
       if (m.poster) {
         const imgFile = this.plugin.app.vault.getAbstractFileByPath(m.poster) as TFile;
         if (imgFile) {
@@ -133,20 +156,17 @@ export class WatchlistView extends ItemView {
         }
       }
 
-      // Info
       const info = card.createEl("div");
       info.style.cssText = "padding:8px 10px 10px";
 
       const ti = info.createEl("div", { text: m.title });
-      ti.style.cssText =
-        "font-weight:600;font-size:13px;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis";
+      ti.style.cssText = "font-weight:600;font-size:13px;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis";
 
       if (m.score) {
         const sc = info.createEl("div", { text: "⭐ " + m.score });
         sc.style.cssText = "font-size:12px;color:var(--text-muted);margin-bottom:8px";
       }
 
-      // Toggle button
       const nextStatus = m.mvStatus === "想看" ? "看过" : "想看";
       const btn = info.createEl("button", {
         text: m.mvStatus === "想看" ? "✓ 看过" : "↩ 想看",
@@ -171,7 +191,6 @@ export class WatchlistView extends ItemView {
         }
       };
 
-      // Click card → open note
       card.onclick = () => {
         this.plugin.app.workspace.getLeaf(false).openFile(m.file);
       };

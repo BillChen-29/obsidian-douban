@@ -29,7 +29,15 @@ createTime: {{currentDate}} {{currentTime}}
 desc: {{desc}}
 ---
 
-![image]({{image}})
+<img src="{{image}}" width="160" align="left" style="margin-right:12px;border-radius:4px">
+
+# {{title}}
+
+⭐ {{score}} | {{yearPublished}}
+
+**导演**: {{director}}
+
+{{desc}}
 `,
 
 	bookTemplateFileContent: `---
@@ -184,7 +192,15 @@ collectionDate: {{myCollectionDate}}
 desc: {{desc}}
 ---
 
-![image]({{image}})
+<img src="{{image}}" width="160" align="left" style="margin-right:12px;border-radius:4px">
+
+# {{title}}
+
+⭐ {{score}} | {{yearPublished}}
+
+**导演**: {{director}}
+
+{{desc}}
 
 Comment: 
 ---
